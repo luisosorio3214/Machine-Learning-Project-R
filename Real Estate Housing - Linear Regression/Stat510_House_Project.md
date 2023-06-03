@@ -20,7 +20,7 @@ and answer research questions.
     model?
 3.  What is the average house price in the united states where the
     average area income is \$50,000, average area house age is 5, an
-    area population of 35,000 people, and average are number of rooms is
+    area population of 35,000 people, and average area number of rooms is
     6?
 
 ### Data Set Attributes:
