@@ -1,4 +1,4 @@
-<h1 style="text-align: center;">Microsoft Stock</h1>
+<h1 align="center">Microsoft Stock</h1>
 
 
 <p align="center" width="100%">
