@@ -1,4 +1,4 @@
-Airline Passenger Satisfaction
+Airline Passenger Satisfaction Analysis
 ================
 
 # Introduction
@@ -23,7 +23,7 @@ variable?
 
 ``` r
 # load the data
-df = read_excel('~/Stat473/satisfaction_2015.xlsx')
+df = read_excel('~/Machine-Learning-Project-R/Airline Statisfaction Analysis/Data Set/satisfaction_2015.xlsx')
 glimpse(df)
 ```
 
@@ -63,7 +63,8 @@ dim(df)
 
     ## [1] 129880     24
 
-We are given 24 features and 129,880 total observations for our dataset.
+We are given 24 features and 129,880 total observations for our data
+set.
 
 ``` r
 # Check for missing values
@@ -228,7 +229,9 @@ corrplot(corr_matrix, method = 'color', tl.cex = 0.5, title = "Correlation Matri
          mar=c(0,0,1,0))
 ```
 
-![](Airline_Passenger_Satisfaction_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->  
+![](Airline_Passenger_Satisfaction_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+  
 From the Correlation matrix above we can see that Seat Comfort is high
 correlated with food/drinks, in flight entertainment, and cleanliness.
 We can also see On-board service is highly correlated with leg room
@@ -241,14 +244,18 @@ plot(df[,'Satisfaction'], main = 'Airline Satisfaction',
      ylab = 'Count', xlab = 'Satisfaction Level', col = rainbow(2))
 ```
 
-![](Airline_Passenger_Satisfaction_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->  
-Satisfaction level is our response variable where we can clearly see it
-is a binary classification problem. Satisfaction level has 2 classes
-either satisfied or neutral/dissatisfied. From the bar chart above we
-can see that the classes are imbalanced. However, the imbalance is not
-too wide but we still have too consider that this may cause issues when
-fitting our models since they can learn a bit more on
-neutral/dissatisfied than the satisfied passengers.  
+![](Airline_Passenger_Satisfaction_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+  
+Satisfaction level is our response or target variable where from the bar
+chart above we can clearly see this is a binary classification problem.
+Satisfaction level has 2 classes which are the passenger was satisfied
+or neutral/dissatisfied with their flight. From the bar chart above we
+can see that the classes are slightly imbalanced. However, the imbalance
+is not too wide but we still have too consider that this may cause
+issues when training our models since they can learn a bit more on
+neutral/dissatisfied than the satisfied passengers because they have
+more data to learn from!  
 
 ``` r
 # bar chart on Gender
@@ -264,7 +271,9 @@ plot(df[,'Class'], main = 'Airline Class',
      ylab = 'Count', xlab = 'Airline Class',  col = c("#E69F00", "#56B4E9", "#009E73"))
 ```
 
-![](Airline_Passenger_Satisfaction_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->  
+![](Airline_Passenger_Satisfaction_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+  
 Here we can see from the Gender bar chart that we have an almost even
 distribution on Females and Males in our data set with a slightly bit
 more Females. From the Airline Class bar chart we can see that a
@@ -285,13 +294,17 @@ plot(df[,'CustomerType'], main = 'Airline Customer Type',
      ylab = 'Count', xlab = 'Customer Type', col = c("#56B4E9", "#009E73"))
 ```
 
-![](Airline_Passenger_Satisfaction_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->  
-Here we can see that a majority of the passengers collect in our data
+![](Airline_Passenger_Satisfaction_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+  
+Here we can see that a majority of the passengers collected in our data
 set were primarily traveling for business purposes rather than personal
-situations. Note this may include bias since majority of the passengers
-are in this data are traveling for business. Also we can see that a
-majority of the passengers in the data are loyal customers and we have a
-few disloyal or new customers.  
+situations. Note this might include some bias since majority of the
+passengers are in this data set are traveling for business and one can
+argue that their experience with flights is greater thus their
+expectations are greater. Also we can see that a majority of the
+passengers in the data are loyal customers and that we have a few
+disloyal/new customers.  
 
 ``` r
 # Age histogram separated by Gender
@@ -300,7 +313,9 @@ ggplot(df, aes(x = Age, color = Gender, fill = Gender)) +
   labs(title = "Age Histogram Separated by Gender", x = "Age", y = "Count")
 ```
 
-![](Airline_Passenger_Satisfaction_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->  
+![](Airline_Passenger_Satisfaction_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+  
 From the Age histogram above we can see that a majority of the
 passengers Age in our data range between 25 to 60 years old. Now if we
 separate the age histogram by gender we can see that we have more
@@ -345,10 +360,6 @@ summary(log.fit)
     ## Call:
     ## glm(formula = Satisfaction ~ ., family = "binomial", data = train_set)
     ## 
-    ## Deviance Residuals: 
-    ##     Min       1Q   Median       3Q      Max  
-    ## -2.8774  -0.4932  -0.1768   0.3885   4.0243  
-    ## 
     ## Coefficients:
     ##                              Estimate Std. Error z value Pr(>|z|)    
     ## (Intercept)                -7.835e+00  7.864e-02 -99.633  < 2e-16 ***
@@ -387,15 +398,15 @@ summary(log.fit)
     ## Number of Fisher Scoring iterations: 6
 
   
-Considering a Hypothesis test, where our null hypothesis is
+Conducting a Hypothesis test, where our null hypothesis is
 $H_0: \beta_i = 0$ versus our alternative hypothesis
 $H_a: \beta_i \neq 0$, where $i =$ all of the predictors used. We can
 see that the only predictor variable that fail to reject our null
-hypothesis when using a significance level of, $\alpha = 0.05$, is
+hypothesis, when using a significance level of, $\alpha = 0.05$, is
 Flight Distance. Hence, the attribute Flight Distance is statistically
 insignificant to our Logistic Regression Model. We will fit another
-Logistic Regression model but with only the statistically significant
-predictors.  
+Logistic Regression model but this time with only the statistically
+significant predictors.  
 
 ``` r
 # Fitting a Logistic Regression Model with all significant predictors
@@ -420,10 +431,6 @@ summary(log.fit2)
     ##     InFlightEntertainment + OnBoardService + LegRoomService + 
     ##     BaggageHandling + CheckinService + InflightService + Cleanliness + 
     ##     DepartureDelay + ArrivalDelay, family = "binomial", data = train_set)
-    ## 
-    ## Deviance Residuals: 
-    ##     Min       1Q   Median       3Q      Max  
-    ## -2.8926  -0.4931  -0.1770   0.3885   4.0254  
     ## 
     ## Coefficients:
     ##                              Estimate Std. Error  z value Pr(>|z|)    
@@ -496,15 +503,15 @@ cat('\nThe Specificity is:', specificity(log_cm))
     ## The Specificity is: 0.8370357
 
   
-The accuracy of the Logistic Regression model with only the significant
-predictors is 87.5%. However, observing other metrics such as
-sensitivity and specificity we can see that the model had a higher
+The accuracy of the Logistic Regression model that was trained with the
+significant predictors was 87.5%. However, observing other metrics such
+as sensitivity and specificity we can see that the model had a higher
 sensitivity rate compared to the specificity rate. This is due to the
 imbalanced classes in our satisfaction response variable. Recall, we had
 more neutral/dissatisfied passengers in our data set, which explains why
 our sensitivity rate is greater. Our model learned the
 neutral/dissatisfied passengers better than satisfied passengers. If we
-want to accurately determine a satsified passeneger we might want to
+want to accurately determine a satisfied passenger we might want to
 increase the specificity rate.  
 
 ``` r
@@ -584,21 +591,24 @@ cat('\nThe Specificity is:', specificity(forest_cm))
     ## The Specificity is: 0.9423316
 
   
-Now the random forest model returned an accuracy of 96.52% on the
-testing data, implying the model did a pretty good job. This is a pretty
-good accuracy since the model predicted on unseen data, testing set,
-implying our model did not over fit on the training data. This means our
-Random Forest has low variance and high bias which is the most optimal
-situation. Now, Random Forest handled the imbalanced classes in our
-response pretty good as well, this may be due to the splits on the
-several decision trees.  
+Now the random forest classifer model returned an accuracy of 96.52% on
+the testing data, implying the model a good job in predicting the
+satisfaction levels despite the model never seeing the data. This
+implies our model did not over train or over fit on the training data
+which is what we wanted. This means our Random Forest algorithm has low
+variance and high bias which is the most optimal situation. Also, our
+random forest model was able to handle the imbalanced classes in our
+response pretty well which may be due to the splits that the several
+decision trees perform.  
 
 ``` r
 # Random Forest Feature Importance
 varImpPlot(forest.fit, main = "Variable Importance (Random Forest)", type = 2)
 ```
 
-![](Airline_Passenger_Satisfaction_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->  
+![](Airline_Passenger_Satisfaction_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+
+  
 We see that having the predictor Online Boarding on top of the trees had
 the overall greatest decrease in gini index. Hence, implying online
 Boarding is a significant predictor in the splitting of the nodes for
@@ -698,13 +708,13 @@ grid |> arrange(miss_classification_rate)
     ## 1         200          0.32                     3                0.2273628
     ## 2         200          0.30                     3                0.2298769
     ## 3         200          0.25                     3                0.2349348
-    ##     time
-    ## 1 55.557
-    ## 2 56.391
-    ## 3 57.709
+    ##    time
+    ## 1 39.21
+    ## 2 39.73
+    ## 3 39.16
 
 ``` r
-# Our best Boosting model with lowest miss classification rate
+# Our best Boosting model with the lowest miss classification rate
 boost.fit.best = gbm(satisfaction_numeric ~ ., train_set, n.trees = 200, 
                      shrinkage = 0.32, interaction.depth = 3,
                      distribution = "bernoulli")
@@ -750,8 +760,9 @@ summary.gbm(boost.fit.best)
 
   
 In our Boosting Model we can see that the predictors that had the most
-influence in terms of a passenger satisfaction was high dependent on
-Online Boarding, In Flight WiFi Service, Type of Travel, and Class.  
+influence in terms of a passenger satisfaction again was highly
+dependent on Online Boarding, In Flight WiFi Service, Type of Travel,
+and Class.  
 
 ``` r
 # Boosting Confusion Matrix
@@ -794,12 +805,12 @@ cat('\nThe Specificity is:', specificity(boost_cm))
 
   
 Our boosting algorithm after doing a grid search for the most optimal
-parameters in terms of the miss-classification rate returned an accuracy
-of 95.37%. Overall, the boosting model performed slightly under the
-Random Forest model which can be due to our parameter tuning. Since
-Boosting still uses trees to classify an observation this can also
-explain why it handled the imbalanced satisfaction classes pretty
-well.  
+parameters in terms of the lowest miss-classification rate returned an
+accuracy of 95.37%. Overall, the boosting model performed slightly under
+the Random Forest accuracy model which can be due to our parameter
+tuning. Since Boosting still uses trees to classify an observation this
+can also explain why it handled the imbalanced satisfaction classes
+pretty well.  
 
 ``` r
 Models = c('Logistic Regression', 'Random Forest', 'Boosting')
@@ -824,12 +835,13 @@ Logistic Regression had the lowest accuracy with a score of 87% which is
 still relatively good since it was the score on unseen data. In terms of
 flexibility, Logistic Regression is the best for real world situations
 since we can play with the metrics and get the results we need. For
-Example, if an airline cared about correctly identifying a passenger who
-was satisfied with the flight we might want to change the threshold on
-the Logistic model to increase specificity rate to reduce the amount of
-error in identifying a satisfied passenger. Overall, Boosting was
-slightly behind Random Forest which could be due to a parameter tuning
-issue since we only checked a small subset of parameters for our model.
+Example, if an airline only cared about correctly identifying a
+passenger who was satisfied with the flight we might want to change the
+threshold on the Logistic model to increase specificity rate to reduce
+the amount of error in identifying a satisfied passenger. Overall,
+Boosting was slightly behind Random Forest which could be due to a
+parameter tuning issue since we only checked a small subset of
+parameters for our model.
 
 ## Business Insights
 
@@ -837,10 +849,12 @@ If an airline cared to increase satisfaction levels of passengers in
 their airline, we observed that Online Boarding, In Flight WiFi Service,
 Travel Type, Class, In Flight Entertainment, Leg Room Service, Customer
 Type, Check In Service, On Board Service, In Flight Service, Seat
-Comfort, and Departure Arrival Time. However, the attributes that we can
-control to increase satisfaction level for our airline in this specific
-order since the level of influence for each attribute is different is
-given:
+Comfort, and Departure Arrival Time are important influences to a
+passenger satisfaction level. Now some of the features above can
+negatively impact satisfaction levels or increase their satisfaction
+level. However, the attributes that we can control to increase
+satisfaction level for our airline in this specific order since the
+level of influence for each attribute is different is given:
 
 1.  Online Boarding - make it easier to purchase fares online and see
     flight information.
