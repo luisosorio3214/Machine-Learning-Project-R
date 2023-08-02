@@ -129,7 +129,7 @@ library('keras')
 
 ``` r
 # setting our LSTM Model
-LSTM.model <- keras_model_sequential() 
+LSTM.model <- keras_model_sequential(set_random_seed(42)) 
 
 # specifying model structure
 LSTM.model %>% layer_lstm(input_shape = dim(train.x)[2:3], units = nsteps)
@@ -158,6 +158,37 @@ pred.y.re <- pred.y*(max(price) - min(price)) + min(price)
 ```
 
 ``` r
+# LSTM Metrics
+
+# mean absolute error
+mae <- mean(abs(pred.y.re - test.y.re))
+# mean squared error
+mse <- mean((pred.y.re - test.y.re)^2)
+
+print("LSTM Metrics:")
+```
+
+    ## [1] "LSTM Metrics:"
+
+``` r
+cat("Mean Absolute Error:",mae,"\n")
+```
+
+    ## Mean Absolute Error: 15.46492
+
+``` r
+cat("Mean Squared Error:",mse,"\n")
+```
+
+    ## Mean Squared Error: 314.6245
+
+``` r
+cat("Root Mean Squared Error:",sqrt(mse))
+```
+
+    ## Root Mean Squared Error: 17.73766
+
+``` r
 #computing prediction accuracy
 accuracy10 <- ifelse(abs(test.y.re - pred.y.re) < 0.10*test.y.re,1,0) 
 accuracy15 <- ifelse(abs(test.y.re - pred.y.re) < 0.15*test.y.re,1,0) 
@@ -168,7 +199,7 @@ accuracy20 <- ifelse(abs(test.y.re - pred.y.re) < 0.20*test.y.re,1,0)
 print(paste("accuracy within 10%:", round(mean(accuracy10),4)))
 ```
 
-    ## [1] "accuracy within 10%: 0.9863"
+    ## [1] "accuracy within 10%: 0.9452"
 
 ``` r
 print(paste("accuracy within 15%:", round(mean(accuracy15),4)))
@@ -192,7 +223,7 @@ plot(as.POSIXct(test.data$Date), test.y.re, type = "l", lwd = 2, col = "green",
   col = c("green","orange"))
 ```
 
-![](Microsoft_Stock_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](Microsoft_Stock_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ### Gated Recurrent Unit Model
 
@@ -202,7 +233,7 @@ plot(as.POSIXct(test.data$Date), test.y.re, type = "l", lwd = 2, col = "green",
 ##################################################
 
 # instantiate our model
-GRU.model <- keras_model_sequential() 
+GRU.model <- keras_model_sequential(set_random_seed(42)) 
 ```
 
 ``` r
@@ -230,6 +261,37 @@ pred.y <- GRU.model %>% predict(test.x, batch_size = 32)
 # rescaling pred.y back to the original scale
 pred.y.re <- pred.y*(max(price) - min(price)) + min(price)
 ```
+
+``` r
+# GRU Metrics
+
+# mean absolute error
+mae <- mean(abs(pred.y.re - test.y.re))
+# mean squared error
+mse <- mean((pred.y.re - test.y.re)^2)
+
+print("GRU Metrics:")
+```
+
+    ## [1] "GRU Metrics:"
+
+``` r
+cat("Mean Absolute Error:",mae,"\n")
+```
+
+    ## Mean Absolute Error: 8.10126
+
+``` r
+cat("Mean Squared Error:",mse,"\n")
+```
+
+    ## Mean Squared Error: 92.75793
+
+``` r
+cat("Root Mean Squared Error:",sqrt(mse))
+```
+
+    ## Root Mean Squared Error: 9.631092
 
 ``` r
 #computing prediction accuracy
@@ -266,4 +328,4 @@ plot(as.POSIXct(test.data$Date), test.y.re, type = "l", lwd = 2, col = "green",
   col = c("green","orange"))
 ```
 
-![](Microsoft_Stock_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](Microsoft_Stock_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->

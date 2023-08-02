@@ -122,7 +122,7 @@ library('keras')
 
 ```{r}
 # setting our LSTM Model
-LSTM.model <- keras_model_sequential() 
+LSTM.model <- keras_model_sequential(set_random_seed(42)) 
 
 # specifying model structure
 LSTM.model %>% layer_lstm(input_shape = dim(train.x)[2:3], units = nsteps)
@@ -148,6 +148,20 @@ pred.y <- LSTM.model %>% predict(test.x, batch_size = 32)
 # rescaling test.y and pred.y back to the original scale
 test.y.re <- test.y*(max(price) - min(price)) + min(price)
 pred.y.re <- pred.y*(max(price) - min(price)) + min(price)
+```
+
+```{r}
+# LSTM Metrics
+
+# mean absolute error
+mae <- mean(abs(pred.y.re - test.y.re))
+# mean squared error
+mse <- mean((pred.y.re - test.y.re)^2)
+
+print("LSTM Metrics:")
+cat("Mean Absolute Error:",mae,"\n")
+cat("Mean Squared Error:",mse,"\n")
+cat("Root Mean Squared Error:",sqrt(mse))
 ```
 
 ```{r}
@@ -179,7 +193,7 @@ plot(as.POSIXct(test.data$Date), test.y.re, type = "l", lwd = 2, col = "green",
 ##################################################
 
 # instantiate our model
-GRU.model <- keras_model_sequential() 
+GRU.model <- keras_model_sequential(set_random_seed(42)) 
 ```
 
 ```{r}
@@ -206,6 +220,20 @@ pred.y <- GRU.model %>% predict(test.x, batch_size = 32)
 ```{r}
 # rescaling pred.y back to the original scale
 pred.y.re <- pred.y*(max(price) - min(price)) + min(price)
+```
+
+```{r}
+# GRU Metrics
+
+# mean absolute error
+mae <- mean(abs(pred.y.re - test.y.re))
+# mean squared error
+mse <- mean((pred.y.re - test.y.re)^2)
+
+print("GRU Metrics:")
+cat("Mean Absolute Error:",mae,"\n")
+cat("Mean Squared Error:",mse,"\n")
+cat("Root Mean Squared Error:",sqrt(mse))
 ```
 
 ```{r}
